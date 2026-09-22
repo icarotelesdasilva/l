@@ -8,8 +8,10 @@ OBJCOPY := objcopy
 CFLAGS := -m32 -ffreestanding -fno-pie -fno-stack-protector -fno-builtin -Wall -Wextra
 LDFLAGS := -m elf_i386 -T linker.ld
 
-C_SOURCES := $(shell find . -type f -name '*.c')
-OBJECTS := $(patsubst ./%.c,$(BUILD)/%.o,$(C_SOURCES))
+VPATH := core:kernel
+
+C_SOURCES := $(shell find kernel -type f -name '*.c' 2>/dev/null)
+OBJECTS := $(patsubst %,$(BUILD)/%,$(notdir $(C_SOURCES:.c=.o)))
 
 STAGE1 := $(BUILD)/stage1.bin
 STAGE2 := $(BUILD)/stage2.bin
@@ -64,3 +66,4 @@ run: $(IMAGE)
 
 clean:
 	rm -rf $(BUILD)
+
