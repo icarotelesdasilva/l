@@ -11,6 +11,12 @@
 
         jmp start
 
+%ifndef TOTAL_SECTORS
+%define TOTAL_SECTORS 2
+%endif
+ ; Since the Makefile automatically calculates the bootloader stage, we need it to know where the NASM definition is being used.
+
+
 boot_drive      db 0
 
 
@@ -70,7 +76,7 @@ chs:
         xor bx, bx
 
         mov ah, 0x02
-        mov al, 17
+        mov al, TOTAL_SECTORS ; We include here the section that the makefile would have generated.
 
         mov ch, 0
         mov cl, 2
@@ -100,7 +106,7 @@ lba:
 
         ; Number of sectors to read.
 
-        mov word [si + 2], 17
+        mov word [si + 2], TOTAL_SECTORS
 
         ; Buffer offset.
         ;
